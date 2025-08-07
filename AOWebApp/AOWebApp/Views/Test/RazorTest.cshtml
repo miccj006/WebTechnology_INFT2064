@@ -1,0 +1,43 @@
+﻿@{
+    int num1 = 1;
+    int num2 = 2;
+    string[] list = { "one", "two", "three" };
+
+    var coordinates = new[] 
+    { 
+        new { x = 0, y = 0 },
+        new { x = 1, y = 0 }, 
+        new { x = 0, y = 1 },
+        new { x = 1, y = 1 }
+    };
+}
+
+<h1>TestController: RazorTest.cshtml</h1>
+
+<h2>2.1</h2>
+<p>@num1 + @num2 = @(num1 + num2)</p>
+
+<h2>2.2</h2>
+<ul>
+    @foreach (var item in list)
+    {
+        <li>@item</li>
+    }
+</ul>
+
+<h2>2.3</h2>
+<ul>
+    @foreach (var coordinate in coordinates)
+    {
+        <li>@coordinate</li>
+    }
+</ul>
+
+<h2>2.4</h2>
+<p>ID = @ViewBag.id</p>
+<p>TEXT = @ViewBag.searchText</p>
+<form method="post" action="/Test/RazorTest">
+    <input type="number" name="id" />
+    <input type="text" name="text" />
+    <button type="submit">Save</button>
+</form>
