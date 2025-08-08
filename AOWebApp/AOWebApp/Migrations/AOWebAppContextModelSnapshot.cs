@@ -23,11 +23,11 @@ namespace AOWebApp.Migrations
 
             modelBuilder.Entity("AOWebApp.Models.CodeFirst.ExampleItem", b =>
                 {
-                    b.Property<int>("itemID")
+                    b.Property<int>("ItemID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("itemID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemID"));
 
                     b.Property<string>("itemName")
                         .IsRequired()
@@ -37,7 +37,7 @@ namespace AOWebApp.Migrations
                     b.Property<decimal>("itemPrice")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.HasKey("itemID");
+                    b.HasKey("ItemID");
 
                     b.ToTable("ExampleItem");
                 });

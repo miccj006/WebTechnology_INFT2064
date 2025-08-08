@@ -6,7 +6,7 @@ namespace AOWebApp.Models.CodeFirst
     public class ExampleItem
     {
         [Key]
-        public int itemID {  get; set; }
+        public int ItemID {  get; set; }
 
         [Required]
         [Display(Name ="Item Name")]
