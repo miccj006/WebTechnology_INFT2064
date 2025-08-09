@@ -1,0 +1,96 @@
+﻿@model IEnumerable<AOWebApp.Models.Item>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="align-content-center">Shop Items</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+@* <table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ItemImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ItemImage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ItemId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ItemId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ItemId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@
+
+<form asp-controller="Items" asp-action="Index" method="post">
+    <label name="searchLabel" class="form-label">Item Search</label>
+    <input name="searchText" type="text" value="@ViewBag.searchText" maxlength="100" class="w-100 mb-2" placeholder="Type here..." title="Search by item name. Max 100 chars." />
+    <div>
+        <input type="submit" value="Submit" class="btn btn-primary" />
+        <a asp-controller="Items" asp-action="Index" class="btn btn-danger">Reset</a>
+    </div>
+</form>
+
+<p><small class="text-muted">@Model.Count() items found.</small></p>
+
+<div class="row justify-content-center">
+    @if (Model.Count() > 0)
+    {
+        @foreach (var item in Model)
+        {
+            <div class="card col-3 m-1 p-2 d-flex flex-wrap align-items-center">
+                <div class="card-body">
+                    <h4 class="card-title">@item.ItemName</h4>
+                    <p class="card-text">@((item.ItemDescription?.Length > 100) ? item.ItemDescription.Substring(0, 100) + "..." : item.ItemDescription)</p>
+                    <p class="card-text">Cost: @item.ItemCost.ToString("C")</p>
+                    <img src="@item.ItemImage" class="card-img-top w-50 mb-2" alt="@item.ItemName image" />
+                    <a asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-primary">View Item Detail</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <h1 class="text-danger">No items found!</h1>
+        <h3>
+            There are no items in the database that match your search, 
+            please try searching again.
+        </h3>
+    }
+</div>
