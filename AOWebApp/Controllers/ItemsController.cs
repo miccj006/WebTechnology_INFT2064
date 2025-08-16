@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AOWebApp.Data;
 using AOWebApp.Models;
+using AOWebApp.Models.ViewModel;
 
 
 namespace AOWebApp.Controllers
@@ -21,7 +22,7 @@ namespace AOWebApp.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index(string SearchText, int? CategoryId)
+        public async Task<IActionResult> Index(ItemSearchViewModel vm)
         {
             #region CategoryQuery
             var Categories =
@@ -36,36 +37,51 @@ namespace AOWebApp.Controllers
                 }
             ).ToList();
 
-            ViewBag.CategoryList = new SelectList(Categories,
+            var CategoryList = new SelectList(Categories,
                                     nameof(ItemCategory.CategoryId),
                                     nameof(ItemCategory.CategoryName),
-                                    CategoryId);
+                                    vm.CategoryId);
 
 
 
             #endregion
 
             #region ItemQuery
-            ViewBag.SearchText = SearchText;
-            ViewBag.CategoryId = CategoryId;
             var amazonDbContext = _context.Items
                 .Include(i => i.Category)
                 .OrderBy(i => i.ItemName)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(SearchText))
+            if (!string.IsNullOrWhiteSpace(vm.SearchText))
             {
                 amazonDbContext = amazonDbContext
-                    .Where(i => i.ItemName.Contains(SearchText));
+                    .Where(i => i.ItemName.Contains(vm.SearchText));
             }
-            if (CategoryId != null)
+            if (vm.CategoryId != null)
             {
                 amazonDbContext = amazonDbContext
-                    .Where(i => i.Category.ParentCategoryId == CategoryId);
+                    .Where(i => i.Category.ParentCategoryId == vm.CategoryId);
             }
+
             #endregion
 
-            return View(await amazonDbContext.ToListAsync());
+            var model = new ItemSearchViewModel
+            {
+                SearchText = vm.SearchText,
+                CategoryId = vm.CategoryId,
+                CategoryList = CategoryList,
+                ItemList = await amazonDbContext
+                .Select(i => new Item_ItemDetail
+                {
+                    TheItem = i,
+                    ReviewCount = (i.Reviews != null ? i.Reviews.Count : 0),
+                    AverageRating = (i.Reviews != null && i.Reviews.Count() > 0 ? i.Reviews.Select(r => r.Rating).Average() : 0)
+                })
+                .ToListAsync()
+            };
+
+
+            return View(model);
         }
 
         // GET: Items/Details/5
