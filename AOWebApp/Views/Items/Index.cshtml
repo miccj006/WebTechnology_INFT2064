@@ -77,13 +77,22 @@
 </form> *@
 
 <form asp-controller="Items" asp-action="Index" method="post" class="row g-2">
-    <div class="col-5">
+    <div class="col-4">
         <input asp-for="SearchText" type="text" value="@Model.SearchText" class="form-control" placeholder="Item search..." title="Search by item name. Max 100 chars." />
     </div>
 
-    <div class="col-4">
+    <div class="col-3">
         <select asp-for="CategoryId" class="form-select" title="View items for a specific category." asp-items="@Model.CategoryList">
             <option value="">All Categories...</option>
+        </select>
+    </div>
+
+    <div class="col-2">
+        <select name="SortOrder" class="form-select">
+            <option value="" selected>Item Name [asc]</option>
+            <option value="name_desc">Item Name [desc]</option>
+            <option value="price_asc">Item Price [asc]</option>
+            <option value="price_desc">Item Price [desc]</option>
         </select>
     </div>
 

@@ -22,7 +22,7 @@ namespace AOWebApp.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index(ItemSearchViewModel vm)
+        public async Task<IActionResult> Index(ItemSearchViewModel vm, string SortOrder)
         {
             #region CategoryQuery
             var Categories =
@@ -52,6 +52,26 @@ namespace AOWebApp.Controllers
                 .OrderBy(i => i.ItemName)
                 .AsQueryable();
 
+            ViewBag.SortOrder = SortOrder;
+            switch (SortOrder)
+            {
+                case "name_desc":
+                    amazonDbContext = amazonDbContext.OrderByDescending(i => i.ItemName);
+                    break;
+
+                case "price_asc":
+                    amazonDbContext = amazonDbContext.OrderBy(i => i.ItemCost);
+                    break;
+
+                case "price_desc":
+                    amazonDbContext = amazonDbContext.OrderByDescending(i => i.ItemCost);
+                    break;
+
+                default:
+                    amazonDbContext = amazonDbContext.OrderBy(i => i.ItemName);
+                    break;
+            }
+
             if (!string.IsNullOrWhiteSpace(vm.SearchText))
             {
                 amazonDbContext = amazonDbContext
@@ -62,6 +82,7 @@ namespace AOWebApp.Controllers
                 amazonDbContext = amazonDbContext
                     .Where(i => i.Category.ParentCategoryId == vm.CategoryId);
             }
+
 
             #endregion
 
