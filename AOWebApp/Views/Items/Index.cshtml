@@ -6,9 +6,6 @@
 
 <h1 class="align-content-center">Shop Items</h1>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Create New</a>
-</p>
 @* <table class="table">
     <thead>
         <tr>
@@ -58,14 +55,29 @@
     </tbody>
 </table> *@
 
-<form asp-controller="Items" asp-action="Index" method="post">
-    <label name="searchLabel" class="form-label">Item Search</label>
-    <input name="searchText" type="text" value="@ViewBag.searchText" maxlength="100" class="w-100 mb-2" placeholder="Type here..." title="Search by item name. Max 100 chars." />
-    <div>
-        <input type="submit" value="Submit" class="btn btn-primary" />
-        <a asp-controller="Items" asp-action="Index" class="btn btn-danger">Reset</a>
-    </div>
+<form asp-controller="Items" asp-action="Index" method="post" class="row g-2">
+        <div class="col-5">
+            <input name="SearchText" type="text" value="@ViewBag.SearchText" class="form-control" placeholder="Item search..." title="Search by item name. Max 100 chars." />
+        </div>
+
+        <div class="col-4">
+            <select name="CategoryId" class="form-select" title="View items for a specific category." asp-items="@ViewBag.CategoryList">
+                <option value="">All Categories...</option>
+            </select>
+        </div>
+
+        <div class="col-3 d-flex gap-2">
+            <input type="submit" value="Search" class="btn btn-outline-primary" />
+            <a asp-controller="Items" asp-action="Index" class="btn btn-outline-danger">Reset</a>
+            <a class="btn btn-outline-info" asp-action="Create">Create New</a>
+        </div>
 </form>
+
+
+
+
+
+
 
 <p><small class="text-muted">@Model.Count() items found.</small></p>
 

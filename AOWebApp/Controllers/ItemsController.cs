@@ -21,18 +21,49 @@ namespace AOWebApp.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index(string searchText)
+        public async Task<IActionResult> Index(string SearchText, int? CategoryId)
         {
-            ViewBag.searchText = searchText;
-            var amazonDbContext = _context.Items.Include(i => i.Category)
-                .OrderBy(i => i.Category)
+            #region CategoryQuery
+            var Categories =
+            (
+                from c in _context.ItemCategories
+                where c.ParentCategory == null
+                orderby c.CategoryName
+                select new
+                {
+                    c.CategoryId,
+                    c.CategoryName
+                }
+            ).ToList();
+
+            ViewBag.CategoryList = new SelectList(Categories,
+                                    nameof(ItemCategory.CategoryId),
+                                    nameof(ItemCategory.CategoryName),
+                                    CategoryId);
+
+
+
+            #endregion
+
+            #region ItemQuery
+            ViewBag.SearchText = SearchText;
+            ViewBag.CategoryId = CategoryId;
+            var amazonDbContext = _context.Items
+                .Include(i => i.Category)
+                .OrderBy(i => i.ItemName)
                 .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchText))
+            if (!string.IsNullOrWhiteSpace(SearchText))
             {
                 amazonDbContext = amazonDbContext
-                    .Where(i => i.ItemName.Contains(searchText));
+                    .Where(i => i.ItemName.Contains(SearchText));
             }
+            if (CategoryId != null)
+            {
+                amazonDbContext = amazonDbContext
+                    .Where(i => i.Category.ParentCategoryId == CategoryId);
+            }
+            #endregion
 
             return View(await amazonDbContext.ToListAsync());
         }

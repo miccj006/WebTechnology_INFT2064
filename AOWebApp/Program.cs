@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AmazonDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("AmazonDbContext") ?? throw new InvalidOperationException("Connection string 'AmazonDbContext' not found.")));
-
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
 
