@@ -6,10 +6,10 @@
 </head>
 <body>
     <h3>Category List</h3>
-    <ul name="categories"></ul>
+    <ul id="categories"></ul>
 
     <h3>Item List</h3>
-    <ul name="items"></ul>
+    <ul id="items"></ul>
 
     <script>
         fetch('/api/ParentCategoriesWebAPI')
@@ -18,7 +18,7 @@
                 let ul = document.querySelector('#categories');
 
                 data.forEach(c => {
-                    let li = docuemnt.createElement("li");
+                    let li = document.createElement("li");
                     li.innerText = c.categoryName
                     ul.appendChild(li);
                 })
@@ -29,8 +29,8 @@
                 let ul = document.querySelector('#items');
 
                 data.forEach(c => {
-                    let li = docuemnt.createElement("li");
-                    li.innerText = c.categoryName
+                    let li = document.createElement("li");
+                    li.innerText = c.itemName
                     ul.appendChild(li);
                 })
             })
