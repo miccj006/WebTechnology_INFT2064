@@ -41,8 +41,7 @@ namespace AOWebApp.Controllers
                 SearchText = vm.SearchText,
                 Suburb = vm.Suburb,
                 SuburbList = vm.SuburbList,
-                CustomerList = new List<Customer>(),
-                NameList = new List<string>()
+                CustomerList = new List<Customer>()
             };
             if (!string.IsNullOrEmpty(vm.SearchText))
             {
