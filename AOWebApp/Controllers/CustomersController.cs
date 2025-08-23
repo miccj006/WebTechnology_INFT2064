@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AOWebApp.Data;
+using AOWebApp.Models;
+using AOWebApp.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AOWebApp.Data;
-using AOWebApp.Models;
+using Microsoft.IdentityModel.Protocols.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace AOWebApp.Controllers
 {
@@ -20,12 +23,54 @@ namespace AOWebApp.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index(string SearchText, string Suburb)
+        public async Task<IActionResult> Index(CustomerSearchViewModel vm)
         {
-            var amazonDbContext = _context.Customers.Include(c => c.Address);
-            return View(await amazonDbContext.ToListAsync());
-            //List<Customer> CustomerList = new List<Customer>();
-            //return View(CustomerList);
+            #region SuburbQuery
+            var SuburbList = _context.Addresses
+                .Select(a => a.Suburb)
+                .Distinct()
+                .OrderBy(a => a)
+                .ToList();
+
+            vm.SuburbList = new SelectList(SuburbList, vm.Suburb);
+            #endregion
+
+            #region CustomerQuery
+            var model = new CustomerSearchViewModel
+            {
+                SearchText = vm.SearchText,
+                Suburb = vm.Suburb,
+                SuburbList = vm.SuburbList,
+                CustomerList = new List<Customer>(),
+                NameList = new List<string>()
+            };
+            if (!string.IsNullOrEmpty(vm.SearchText))
+            {
+                var query = _context.Customers
+                    .Include(c => c.Address)
+                    .Where(c => c.FirstName.Contains(vm.SearchText)
+                     || c.LastName.Contains(vm.SearchText));
+
+                if (!string.IsNullOrEmpty(vm.Suburb))
+                {
+                    query = query.Where(c => c.Address.Suburb == vm.Suburb);
+                }
+
+                query = query
+                    .OrderBy(c => !c.FirstName.Contains(vm.SearchText))
+                    .ThenBy(c => !c.LastName.Contains(vm.SearchText));
+
+                model = new CustomerSearchViewModel
+                {
+                    SearchText = vm.SearchText,
+                    Suburb = vm.Suburb,
+                    SuburbList = vm.SuburbList,
+                    CustomerList = await query.ToListAsync()
+                };
+            }
+            #endregion
+
+            return View(model);
         }
 
         // GET: Customers/Details/5
