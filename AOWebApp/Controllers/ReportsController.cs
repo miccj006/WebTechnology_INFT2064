@@ -27,7 +27,7 @@ namespace AOWebApp.Controllers
             return View("AnnualSalesReport", new SelectList(years));
         }
         [Produces("application/json")]
-        public IActionResult AnnualSallaryReportData(int Year)
+        public IActionResult AnnualSalesReportData(int Year)
         {
             if (Year > 0)
             {
