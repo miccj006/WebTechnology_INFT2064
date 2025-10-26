@@ -1,0 +1,32 @@
+﻿import { useState, useEffect } from 'react'
+import Card from './CardV3'
+
+const CardListNew = ({ }) => {
+    const [cardData, setState] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost:5154/api/ItemsWebAPI")
+            .then(response => response.json())
+            .then(data => setState(data))
+            .catch(err => {
+                console.log(err);
+            });
+    }, [])
+
+    return (
+        <div className="row justify-content-center m-5">
+            {cardData.map((obj) => (
+                <Card 
+                    key={obj.itemId}
+                    itemId={obj.itemId}
+                    itemName={obj.itemName}
+                    itemDescription={obj.itemDescription}
+                    itemCost={obj.itemCost}
+                    itemImage={obj.itemImage}
+                />
+            ))}
+        </div>
+    )
+}
+
+export default CardListNew

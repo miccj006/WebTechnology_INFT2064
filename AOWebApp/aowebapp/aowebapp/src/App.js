@@ -3,7 +3,7 @@ import './App.css';
 import Card from './components/Card'
 import CardV2 from './components/CardV2'
 import CardV3 from './components/CardV3'
-import CardList from './components/CardList'
+import CardList from './components/CardListSearch'
 
 function App() {
     return (
