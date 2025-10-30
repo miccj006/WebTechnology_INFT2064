@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./routes/Home";
 import Contact from "./routes/Contact";
+import Graph from "./routes/Graph";
 import CardListSearch from './components/CardListSearch';
 import CardDetail from './components/CardDetail'
 
@@ -18,8 +19,8 @@ root.render(
                     <Route path="Home" element={<Home />} />
                     <Route path="Contact" element={<Contact />} />
                     <Route path="Products" element={<CardListSearch />} />
+                    <Route path="Graph" element={<Graph />} />
                     <Route path="Products/:itemId" element={<CardDetail />} />
-                    <Route path="" element={<Home />} />
                     <Route path="*" element={<Home />} />
                 </Route>
             </Routes>
