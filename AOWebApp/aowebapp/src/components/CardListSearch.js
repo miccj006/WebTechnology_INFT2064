@@ -20,8 +20,20 @@ const CardListSearch = ({ }) => {
         setQuery(value);
     }
 
+    function handleSubmit(e) {
+        // Prevent the browser from reloading the page
+        e.preventDefault();
+
+        // Read the form data
+        const form = e.target;
+        const formData = new FormData(form);
+
+        setQuery(formData.get("formSearchText"));
+    }
+
     return (
         <div className="cardListSearch">
+            {/*Normal Search*/}
             <div className="row justify-content-center m-5">
                 <div className="col-3">
                     <input type="text" name="searchText" className="form-control" placeholder="Type your query" />
@@ -30,6 +42,18 @@ const CardListSearch = ({ }) => {
                     <button type="button" className="btn btn-primary" onClick={ searchQuery }>Search</button>
                 </div>
             </div>
+
+            {/*Form Search Example*/}
+            <form className="row justify-content-center m-5" method="post" onSubmit={handleSubmit}>
+                <div className="col-3">
+                    <input type="text" name="formSearchText" className="form-control" placeholder="Form Search Example Input" />
+                </div>
+                <div className="col text-left">
+                    <button type="submit" className="btn btn-primary">Submit form</button>
+                </div>
+            </form>
+
+            {/*Card List View*/}
             <div id="cardList" className="row justify-content-center m-5">
                 {cardData.map((obj) => (
                     <Card 
@@ -42,6 +66,7 @@ const CardListSearch = ({ }) => {
                     />
                 ))}
             </div>
+
         </div>
     )
 }
